@@ -2,6 +2,8 @@
 
 using namespace std;
 
+//tambahin kodemu mulai dibawah ini
+
 //main kosongin, diisi terakhir
 int main()
 {
