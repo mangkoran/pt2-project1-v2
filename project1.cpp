@@ -38,6 +38,45 @@ class Symptom
 		}	
 };
 
+class State
+{
+	private:
+		std::string name;
+		std::string status;
+		float chance;
+	public:
+		State()
+		{
+			name = "";
+			status = "";
+			chance = 0.0;
+		}
+		void setName(std::string n)
+		{
+			name = n;
+		}
+		void setStatus(std::string _status)
+		{
+			status = _status;
+		}
+		void setChance(float c)
+		{
+			chance = c;
+		}
+		std::string getName()
+        {
+            return name;
+        }
+		std::string getStatus()
+        {
+            return status;
+        }
+		float getChance()
+        {
+            return chance;
+        }
+};
+
 //main kosongin, diisi terakhir
 int main()
 {
