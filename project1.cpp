@@ -1,4 +1,5 @@
 #include<iostream>
+#include<fstream>
 
 class Symptom
 {
@@ -73,6 +74,10 @@ class State
 		float getChance()
         {
             return chance;
+        }
+        void readFile()
+        {
+            std::ifstream ("state.txt"); //waiting for the state and status file from atifaaa
         }
 };
 
