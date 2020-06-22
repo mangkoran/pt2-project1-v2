@@ -79,7 +79,7 @@ class State
 //main kosongin, diisi terakhir
 int main()
 {
-    cout << "\n";
+    std::cout << "\n";
     system("pause");
     return 0;
 }
