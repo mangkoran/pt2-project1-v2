@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include<string>
 
 class Symptom
 {
@@ -77,7 +78,14 @@ class State
         }
         void readFile()
         {
-            std::ifstream ("state.txt"); //waiting for the state and status file from atifaaa
+            std::ifstream fin ("statezone.txt");
+			int count = 0;
+			while ( getline(fin,name,',') )
+			{
+				getline(fin,status);
+				count++;
+			}
+			fin.close();
         }
 };
 
