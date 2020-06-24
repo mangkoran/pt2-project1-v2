@@ -1,13 +1,14 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+using namespace std;
 
 class Symptom
 {
 	private:
-		std::string name;
+		string name;
 		float chance;
-		std::string question;
+		string question;
 	public:
 		Symptom()
 		{
@@ -16,7 +17,7 @@ class Symptom
 			question = "";
 			
 		}
-		void setName(std::string _name)
+		void setName(string _name)
 		{
 			name = _name;
 		}
@@ -24,7 +25,7 @@ class Symptom
 		{
 			chance = _chance;
 		}
-		std::string getName()
+		string getName()
 		{
 			return name;
 		}
@@ -34,16 +35,16 @@ class Symptom
 		}
 		void printQuestion()
 		{			  
-	        std::cout << "\nIn the last 14 days, do you:\n";
-            std::cout << "(please answer with 'yes' or 'no' only)\n\n";
+	        cout << "\nIn the last 14 days, do you:\n";
+            cout << "(please answer with 'yes' or 'no' only)\n\n";
 		}	
 };
 
 class State
 {
 	private:
-		std::string name;
-		std::string status;
+		string name;
+		string status;
 		float chance;
 	public:
 		State()
@@ -52,11 +53,11 @@ class State
 			status = "";
 			chance = 0.0;
 		}
-		void setName(std::string n)
+		void setName(string n)
 		{
 			name = n;
 		}
-		void setStatus(std::string _status)
+		void setStatus(string _status)
 		{
 			status = _status;
 		}
@@ -64,11 +65,11 @@ class State
 		{
 			chance = c;
 		}
-		std::string getName()
+		string getName()
         {
             return name;
         }
-		std::string getStatus()
+		string getStatus()
         {
             return status;
         }
@@ -78,7 +79,7 @@ class State
         }
         void readFile()
         {
-            std::ifstream fin ("statezone.txt");
+            ifstream fin ("statezone.txt");
 			int count = 0;
 			while ( getline(fin,name,',') )
 			{
@@ -92,7 +93,7 @@ class State
 //main kosongin, diisi terakhir
 int main()
 {
-    std::cout << "\n";
+    cout << "\n";
     system("pause");
     return 0;
 }
