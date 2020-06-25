@@ -6,14 +6,14 @@ using namespace std;
 class DiseaseHistory
 {
     private:
-        std::string name;
+        string name;
         float chance;
     public:
-        DiseaseHistory(std::string n = "")
+        DiseaseHistory(string n = "")
         {
             name = n;
         }
-        void setName (std::string disease)
+        void setName (string disease)
         {
             name = disease;
         }
@@ -21,7 +21,7 @@ class DiseaseHistory
         {
             chance = ch;
         }
-        std::string getName()
+        string getName()
         {
             return name;
         }
@@ -31,12 +31,12 @@ class DiseaseHistory
         }
         void printQuestion()
         {
-			std::string ans;
-			std::cout << "(Answer Yes/No)";
-			std::cout << " Do you have any comorbid COVID-19 condition such as ";
-			std::cout << getName() << "\n";
-			std::cout << "Your Answer: ";
-			std::cin >> ans;			
+			string ans;
+			cout << "(Answer Yes/No)";
+			cout << " Do you have any comorbid COVID-19 condition such as ";
+			cout << getName() << "\n";
+			cout << "Your Answer: ";
+			cin >> ans;			
         }
         
 };
