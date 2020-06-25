@@ -86,7 +86,32 @@ public:
     }
 };
 
-
+class Local: public Person
+{
+private:
+    State* prevLoc;
+public:
+    Local()
+    {
+        prevLoc = NULL;
+    };
+    void setPrevLoc(State* s)
+    {
+        prevLoc = s;
+    }
+    void setChance()
+    {
+        if(count != 0)
+        {
+            for(int i = 0; i < count; ++i)
+            {
+                // chance += symptom[i]->getChance();
+            }
+        }
+        // chance += currLoc->getChance();
+        // chance += prevLoc->getChance();
+    }
+};
 
 //main kosongin, diisi terakhir
 int main()
