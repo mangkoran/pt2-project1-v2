@@ -68,7 +68,7 @@ public:
     }
     virtual void setChance()
     {
-        // if(count != 0)                          //if no symmptom, chance = 0
+        // if(count != 0)                          //count == 0 -> no symptom
         // {
         //     for(int i = 0; i < count; ++i)
         //     {
@@ -110,6 +110,27 @@ public:
         }
         // chance += currLoc->getChance();
         // chance += prevLoc->getChance();
+    }
+};
+
+class Foreign: public Person
+{
+private:
+    /* data */
+public:
+    Foreign();
+    void setChance()
+    {
+        if(count != 0)                          //count == 0 -> no symptom
+        {
+            for(int i = 0; i < count; ++i)
+            {
+                // chance += symptom[i]->getChance();
+            }
+        }
+        // chance += currLoc->getChance();
+        // chance += prevLoc->getChance();
+        chance += 5;
     }
 };
 
