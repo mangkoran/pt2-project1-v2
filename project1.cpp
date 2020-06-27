@@ -3,6 +3,7 @@
 #include<iomanip>
 #include<string>
 #include<vector>
+#include<Windows.h>
 using namespace std;
 
 //tambahin kodemu mulai dibawah ini
@@ -140,6 +141,10 @@ public:
     {
         return name;
     }
+    vector<Symptom*>* getSymptom()
+    {
+        return &symptom;
+    }
     int getChance()
     {
         return chance;
@@ -257,10 +262,10 @@ vector<State> stateInput()
 
 vector<DiseaseHistory> dhInput()
 {
-    vector<DiseaseHistory> vTemp;
-    DiseaseHistory cTemp;
-    string nTemp;
-    string chTemp;
+    vector<DiseaseHistory> vTemp;   //temp for vector of DiseaseHistory
+    DiseaseHistory cTemp;           //temp for DiseaseHistory
+    string nTemp;                   //temp for name
+    string chTemp;                  // temp for chance
     ifstream inf("diseasehistory.txt");
     while(!inf.eof())
     {
@@ -278,11 +283,11 @@ void intro()
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      Hi, I'm LiSA. I'm goint to ask you some questions                   !\n"
-         << "   !      I will use your answers to give you advice about the right level    !\n"
-         << "   !      of medical care you should seek.                                    !\n"
+         << "   !       Hi, I'm LiSA. I'm going to ask you some questions.                 !\n"
+         << "   !       I will use your answers to give you advice about the right level   !\n"
+         << "   !       of medical care you should seek.                                   !\n"
          << "   !                                                                          !\n"
-         << "   !      Let's get started.                                                  !\n"
+         << "   !       Let's get started.                                                 !\n"
          << "   \\__________________________________________________________________________/\n";
 }
 
@@ -290,10 +295,10 @@ void gender()
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      What is your gender?                                                !\n"
+         << "   !       What is your gender?                                               !\n"
          << "   !                                                                          !\n"
-         << "   !      1    Male                                                           !\n"
-         << "   !      2    Female                                                         !\n";
+         << "   !       1    Male                                                          !\n"
+         << "   !       2    Female                                                        !\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -301,17 +306,17 @@ void age()
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      What is your age?                                                   !\n";
+         << "   !       What is your age?                                                  !\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 void location(vector<State>& state)
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      Where in the Malaysia are you located?                              !\n"
+         << "   !       Where in the Malaysia are you located?                             !\n"
          << "   !                                                                          !\n";
     for(int i = 0; i < state.size(); ++i)
-        cout << "   !      " << setw(4) << i+1 << setw(63) << state[i].getName() << "!\n";
+        cout << "   !       " << left << setw(4) << i+1 << setw(63) << state[i].getName() << "!\n";     //kalau pakai setw -> char[82] (+1)
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -319,10 +324,10 @@ void diseaseHistory(vector<DiseaseHistory>& dh)
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      Do you have any of these disease previously?                        !\n"
+         << "   !       Do you have any of these disease previously?                       !\n"
          << "   !                                                                          !\n";
     for(int i = 0; i < dh.size(); ++i)
-        cout << "   !      " << setw(4) << i+1 << setw(63) << dh[i].getName() << "!\n";
+        cout << "   !       " << left << setw(4) << i+1 << setw(63) << dh[i].getName() << "!\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -330,9 +335,10 @@ void symptom(vector<Symptom>& symptom)
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      Do you have any of the following symptoms?                          !\n";
+         << "   !       Do you have any of the following symptoms?                         !\n"
+         << "   !                                                                          !\n";
     for(int i = 0; i < symptom.size(); ++i)
-        cout << "   !      " << setw(4) << i+1 << setw(63) << symptom[i].getName() << "!\n";
+        cout << "   !       " << left << setw(4) << i+1 << setw(63) << symptom[i].getName() << "!\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -340,18 +346,52 @@ void symptomQuestion(Symptom* sq)
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !      " << setw(67) << sq->getQuestion() << "!\n";
+         << "   !       " << left << setw(67) << sq->getQuestion() << "!\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void last()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !       I'm analyzing your answers...                                      !\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
 //main kosongin, diisi terakhir
 int main()
 {
-    
-    intro();
-    gender();
-    age();
+    vector<DiseaseHistory> dh = dhInput();
+    vector<Symptom> s = symptomInput();
+    vector<Local> l;
+    // Local l;
+    int temp;
 
+    intro();
+    Sleep(3000);
+    gender();
+    cout << "\n   Your input: ";
+    cin >> temp;
+    Sleep(3000);
+    age();
+    cout << "\n   Your input: ";
+    cin >> temp;
+    Sleep(3000);
+    diseaseHistory(dh);
+    cout << "\n   Your input: ";
+    cin >> temp;
+    Sleep(3000);
+    symptom(s);
+    cout << "\n   Your input: ";
+    cin >> temp;
+    Sleep(3000);
+    l[0].addSymptom(&s[0]);
+    symptomQuestion((*l[0].getSymptom())[0]);
+    cout << "\n   Your input: ";
+    cin >> temp;
+    Sleep(3000);
+    last();
+    
 
     cout << "\n";
     system("pause");
