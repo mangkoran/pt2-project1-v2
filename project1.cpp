@@ -214,7 +214,65 @@ public:
     }
 };
 
-void intro0()
+vector<Symptom> symptomInput()
+{
+    vector<Symptom> vTemp;      //temp for vector of Symptom
+    Symptom cTemp;              //temp for Symptom
+    string nTemp;               //temp for name
+    string chTemp;              //temp for chance
+    string qTemp;               //temp for question
+    ifstream inf("symptom.txt");
+    while(!inf.eof())
+    {
+        getline(inf, nTemp, ',');
+        getline(inf, chTemp, ',');
+        getline(inf, qTemp, '\n');
+        cTemp.setName(nTemp);
+        cTemp.setChance(stoi(chTemp));
+        cTemp.setQuestion(qTemp);
+        vTemp.push_back(cTemp);
+    }
+    inf.close();
+    return vTemp;
+}
+
+vector<State> stateInput()
+{
+    vector<State> vTemp;        //temp for vector of State
+    State cTemp;                //temp for State
+    string nTemp;               //temp for name
+    string sTemp;               //temp for status
+    ifstream inf("state.txt");
+    while(!inf.eof())
+    {
+        getline(inf, nTemp, ',');
+        getline(inf, sTemp, '\n');
+        cTemp.setName(nTemp);
+        cTemp.setStatus(sTemp);
+        vTemp.push_back(cTemp);
+    }
+    inf.close();
+    return vTemp;
+}
+
+vector<DiseaseHistory> dhInput()
+{
+    vector<DiseaseHistory> vTemp;
+    DiseaseHistory cTemp;
+    string nTemp;
+    string chTemp;
+    ifstream inf("diseasehistory.txt");
+    while(!inf.eof())
+    {
+        getline(inf, nTemp, ',');
+        getline(inf, chTemp, '\n');
+        cTemp.setName(nTemp);
+        cTemp.setChance(stoi(chTemp));
+        vTemp.push_back(cTemp);
+    }
+    inf.close();
+    return vTemp;
+}
 
 void intro()
 {
