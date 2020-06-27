@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include<iomanip>
 #include<string>
 #include<vector>
 using namespace std;
@@ -9,37 +10,39 @@ class Symptom
 {
 private:
     string name;
-    float chance;
+    int chance;
     string question;
 public:
     Symptom()
     {
         name = "";
-        chance = 0.0;
+        chance = 0;
         question = "";
-        
     }
-    void setName(string _name)
+    void setName(string n)
     {
-        name = _name;
+        name = n;
     }
-    void setChance(float _chance)
+    void setChance(int c)
     {
-        chance = _chance;
+        chance = c;
+    }
+    void setQuestion(string q)
+    {
+        question = q;
     }
     string getName()
     {
         return name;
     }
-    float getChance()
+    int getChance()
     {
         return chance;
     }
-    void printQuestion()
-    {			  
-        cout << "\nIn the last 14 days, do you:\n";
-        cout << "(please answer with 'yes' or 'no' only)\n\n";
-    }	
+    string getQuestion()
+    {
+        return question;
+    }
 };
 
 class State
@@ -47,25 +50,28 @@ class State
 private:
     string name;
     string status;
-    float chance;
+    int chance;
 public:
     State()
     {
         name = "";
         status = "";
-        chance = 0.0;
+        chance = 0;
     }
     void setName(string n)
     {
         name = n;
     }
-    void setStatus(string _status)
+    void setStatus(string s)
     {
-        status = _status;
+        status = s;
+        setChance();
     }
-    void setChance(float c)
+    void setChance()
     {
-        chance = c;
+        if(status == "Green") chance = 0;
+        else if(status == "Yellow") chance = 10;
+        else if(status == "Red") chance = 20;
     }
     string getName()
     {
@@ -75,21 +81,21 @@ public:
     {
         return status;
     }
-    float getChance()
+    int getChance()
     {
         return chance;
     }
-    void readFile()
-    {
-        ifstream fin ("statezone.txt");
-        int count = 0;
-        while ( getline(fin,name,',') )
-        {
-            getline(fin,status);
-            count++;
-        }
-        fin.close();
-    }
+    // void readFile()
+    // {
+    //     ifstream fin ("statezone.txt");
+    //     int count = 0;
+    //     while ( getline(fin,name,',') )
+    //     {
+    //         getline(fin,status);
+    //         count++;
+    //     }
+    //     fin.close();
+    // }
 };
 
 class Person
@@ -127,10 +133,8 @@ public:
     }
     virtual void setChance()
     {
-        if(count != 0)                          //count == 0 -> no symptom
-        {
-            for(auto i : symptom) chance += i->getChance();
-        }
+        // for(auto i : symptom)
+        //     chance += i->getChance();
     }
     string getName()
     {
@@ -157,10 +161,9 @@ public:
     }
     void setChance()
     {
-        if(count != 0)
-        {
-            for(auto i : symptom) chance += i->getChance();
-        }
+        for(auto i : symptom)
+            chance += i->getChance();
+
         chance += currLoc->getChance();
         chance += prevLoc->getChance();
     }
@@ -174,12 +177,11 @@ public:
     Foreign();
     void setChance()
     {
-        if(count != 0)                          //count == 0 -> no symptom
-        {
-            for(auto i : symptom)  chance += i->getChance();
-        }
+        for(auto i : symptom)
+            chance += i->getChance();
+
         chance += currLoc->getChance();
-        chance += 5;
+        chance += 10;
     }
 };
 
@@ -192,10 +194,11 @@ public:
     DiseaseHistory()
     {
         name = "";
+        chance = 0;
     }
-    void setName (string disease)
+    void setName (string s)
     {
-        name = disease;
+        name = s;
     }
     void setChance (int c)
     {
