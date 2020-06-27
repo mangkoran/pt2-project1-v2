@@ -243,6 +243,18 @@ class DiseaseHistory
         }
 };
 
+void intro0()
+{
+    cout << "_______________________________________________________________________________ \n"
+         << "    \\                                                                          \\\n"
+         << "    !      Hi, I'm LiSA. I'm goint to ask you some questions                   !\n"
+         << "    !      I will use your answers to give you advice about the right level    !\n"
+         << "    !      of medical care you should seek.                                    !\n"
+         << "    !                                                                          !\n"
+         << "    !      Let's get started.                                                  !\n"
+         << "    \\__________________________________________________________________________/\n";
+}
+
 //main kosongin, diisi terakhir
 int main()
 {
