@@ -114,6 +114,7 @@ public:
         name = "";
         age = 0;
         count = 0;
+        currLoc = NULL;
         chance = 0;
     };
     void setName(string n)
@@ -179,7 +180,7 @@ class Foreign: public Person
 private:
     /* data */
 public:
-    Foreign();
+    Foreign() {};
     void setChance()
     {
         for(auto i : symptom)
@@ -320,6 +321,17 @@ void location(vector<State>& state)
     cout << "   \\__________________________________________________________________________/\n";
 }
 
+void overseas()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !       Did you travel overseas in the last two weeks?                     !\n"
+         << "   !                                                                          !\n"
+         << "   !       1    Yes                                                           !\n"
+         << "   !       2    No                                                            !\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
 void diseaseHistory(vector<DiseaseHistory>& dh)
 {
     cout << "______________________________________________________________________________ \n"
@@ -358,38 +370,141 @@ void last()
     cout << "   \\__________________________________________________________________________/\n";
 }
 
+void analysis()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !       I'm analyzing your answers...                                      !\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void checkPrev(vector<Local>& l, vector<Foreign>& f)
+{
+    
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !       I'm analyzing your answers...                                      !\n";
+    cout << "   \\__________________________________________________________________________/\n";    
+}
+
 //main kosongin, diisi terakhir
 int main()
 {
-    vector<DiseaseHistory> dh = dhInput();
-    vector<Symptom> s = symptomInput();
-    vector<Local> l;
-    // Local l;
+    vector<DiseaseHistory> vecDh = dhInput();
+    vector<State> vecSt = stateInput();
+    vector<Symptom> vecS = symptomInput();
+    vector<Local> vecL;
+    vector<Foreign> vecF;
+    Local l;
+    Foreign f;
     int temp;
+    int a;                  //temp for age
+    int cL;                 //temp for current location
+    int o;                  //temp for overseas
+    string dh;
+    string s;
 
     intro();
-    Sleep(3000);
+    Sleep(1000);
+
     gender();
     cout << "\n   Your input: ";
     cin >> temp;
-    Sleep(3000);
+    Sleep(1000);
+
     age();
     cout << "\n   Your input: ";
-    cin >> temp;
-    Sleep(3000);
-    diseaseHistory(dh);
+    cin >> a;
+    Sleep(1000);
+
+    location(vecSt);
+    cout << "\n   Your input: ";
+    cin >> cL;
+    Sleep(1000);
+
+    overseas();
+    cout << "\n   Your input: ";
+    cin >> o;
+    Sleep(1000);
+
+    if(o == 1)
+    {
+        f.setAge(a);
+        f.setCurrLoc(&vecSt[cL-1]);
+    }
+    else if(o == 2)
+    {
+        l.setAge(a);
+        l.setCurrLoc(&vecSt[cL-1]);
+    }
+
+    diseaseHistory(vecDh);
     cout << "\n   Your input: ";
     cin >> temp;
-    Sleep(3000);
-    symptom(s);
+    Sleep(1000);
+
+    symptom(vecS);
     cout << "\n   Your input: ";
-    cin >> temp;
-    Sleep(3000);
-    l[0].addSymptom(&s[0]);
-    symptomQuestion((*l[0].getSymptom())[0]);
-    cout << "\n   Your input: ";
-    cin >> temp;
-    Sleep(3000);
+    cin.ignore();
+    getline(cin, s);
+    if(o == 1)
+    {
+        for(char i : s)
+        {
+            if(i == ' ') continue;
+            int j = i - '0' - 1;
+            for(int k = 0; k < vecS.size(); ++k)
+            {
+                if(j == k)
+                {
+                    f.addSymptom(&vecS[j]);
+                }
+            }
+        }
+    }
+    else if(o == 2)
+    {
+        for(char i : s)
+        {
+            if(i == ' ') continue;
+            int j = i - '0' - 1;
+            for(int k = 0; k < vecS.size(); ++k)
+            {
+                if(j == k)
+                {
+                    l.addSymptom(&vecS[j]);
+                }
+            }
+        }
+    }
+    Sleep(1000);
+
+    // l.addSymptom(&vecS[0]);
+    // symptomQuestion((*l.getSymptom())[0]);
+    // cout << "\n   Your input: ";
+    // cin >> temp;
+    // Sleep(1000);
+    if(o == 1)
+    {
+        for(auto i : *f.getSymptom())
+        {
+            symptomQuestion(i);
+            cout << "\n   Your input: ";
+            cin >> temp;
+            Sleep(1000);
+        }
+    }
+    else if(o == 2)
+    {
+        for(auto i : *l.getSymptom())
+        {
+            symptomQuestion(i);
+            cout << "\n   Your input: ";
+            cin >> temp;
+            Sleep(1000);
+        }
+    }
+
     last();
     
 
