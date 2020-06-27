@@ -215,22 +215,86 @@ public:
 };
 
 void intro0()
+
+void intro()
 {
-    cout << "_______________________________________________________________________________ \n"
-         << "    \\                                                                          \\\n"
-         << "    !      Hi, I'm LiSA. I'm goint to ask you some questions                   !\n"
-         << "    !      I will use your answers to give you advice about the right level    !\n"
-         << "    !      of medical care you should seek.                                    !\n"
-         << "    !                                                                          !\n"
-         << "    !      Let's get started.                                                  !\n"
-         << "    \\__________________________________________________________________________/\n";
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      Hi, I'm LiSA. I'm goint to ask you some questions                   !\n"
+         << "   !      I will use your answers to give you advice about the right level    !\n"
+         << "   !      of medical care you should seek.                                    !\n"
+         << "   !                                                                          !\n"
+         << "   !      Let's get started.                                                  !\n"
+         << "   \\__________________________________________________________________________/\n";
+}
+
+void gender()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      What is your gender?                                                !\n"
+         << "   !                                                                          !\n"
+         << "   !      1    Male                                                           !\n"
+         << "   !      2    Female                                                         !\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void age()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      What is your age?                                                   !\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+void location(vector<State>& state)
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      Where in the Malaysia are you located?                              !\n"
+         << "   !                                                                          !\n";
+    for(int i = 0; i < state.size(); ++i)
+        cout << "   !      " << setw(4) << i+1 << setw(63) << state[i].getName() << "!\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void diseaseHistory(vector<DiseaseHistory>& dh)
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      Do you have any of these disease previously?                        !\n"
+         << "   !                                                                          !\n";
+    for(int i = 0; i < dh.size(); ++i)
+        cout << "   !      " << setw(4) << i+1 << setw(63) << dh[i].getName() << "!\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void symptom(vector<Symptom>& symptom)
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      Do you have any of the following symptoms?                          !\n";
+    for(int i = 0; i < symptom.size(); ++i)
+        cout << "   !      " << setw(4) << i+1 << setw(63) << symptom[i].getName() << "!\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
+
+void symptomQuestion(Symptom* sq)
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !      " << setw(67) << sq->getQuestion() << "!\n";
+    cout << "   \\__________________________________________________________________________/\n";
 }
 
 //main kosongin, diisi terakhir
 int main()
 {
-    vector<Symptom> vec;
-    intro0();
+    
+    intro();
+    gender();
+    age();
+
+
     cout << "\n";
     system("pause");
     return 0;
