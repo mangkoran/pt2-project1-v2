@@ -1,3 +1,5 @@
 Diabetes,10
-Pilek,10
-Cegukan,10
+Cardiovascular disease,10
+History of chronic lung disease,10
+History of chronic liver disease,10
+History of chronic kidney disease,10

@@ -1,16 +1,16 @@
 Johor,Red
 Kedah,Red
 Kelantan,Red
-Melaka,Green
-Negeri Sembilan,Green
-Pahang,Green
+Melaka,Yellow
+Negeri Sembilan,Yellow
+Pahang,Yellow
 Penang,Yellow
 Perak,Yellow
 Perlis,Yellow
-Sabah,Yellow
+Sabah,Green
 Sarawak,Green
-Selangor,Green
-Terengganu,Green
-Kuala Lumpur,Green
+Selangor,Red
+Terengganu,Red
+Kuala Lumpur,Red
 Labuan,Red
 Putrajaya,Red
