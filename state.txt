@@ -1,16 +1,16 @@
-Johor, Red
-Kedah, Red
-Kelantan, Red
-Melaka, Green
-Negeri Sembilan, Yellow
-Pahang, Green
-Penang, Yellow
-Perak, Yellow
-Perlis, Yellow
-Sabah, Yellow
-Sarawak, Green
-Selangor, Green
-Terengganu, Green
-Kuala Lumpur, Green
-Labuan, Red
-Putrajaya, Red
+Johor,Red
+Kedah,Red
+Kelantan,Red
+Melaka,Green
+Negeri Sembilan,Green
+Pahang,Green
+Penang,Yellow
+Perak,Yellow
+Perlis,Yellow
+Sabah,Yellow
+Sarawak,Green
+Selangor,Green
+Terengganu,Green
+Kuala Lumpur,Green
+Labuan,Red
+Putrajaya,Red

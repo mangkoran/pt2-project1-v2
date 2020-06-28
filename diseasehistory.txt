@@ -1,3 +1,3 @@
-Diabetes, 10
-Pilek, 10
-Cegukan, 10
+Diabetes,10
+Pilek,10
+Cegukan,10

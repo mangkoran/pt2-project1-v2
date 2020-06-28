@@ -1,3 +1,3 @@
-Fever, 10, How high is your fever?
-Cough, 10, Are you coughing blood?
-Suffocation, 10, Are you breathing?
+Fever,10,How high is your fever?
+Cough,10,Are you coughing blood?
+Suffocation,10,Are you breathing?
