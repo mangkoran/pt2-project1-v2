@@ -1,4 +1,5 @@
 #include<iostream>
+#include<exception>
 #include<fstream>
 #include<iomanip>
 #include<string>
@@ -7,6 +8,87 @@
 using namespace std;
 
 //tambahin kodemu mulai dibawah ini
+
+//thrown if user enter invalid input
+class InvalidInput: public exception
+{
+    const char* what() const throw()
+    {
+        return "\nInvalid input. Program is exiting...";
+    }
+} invinput;
+
+class DiseaseHistory
+{
+private:
+    string name;
+    int chance;
+public:
+    DiseaseHistory()
+    {
+        name = "";
+        chance = 0;
+    }
+    void setName (string s)
+    {
+        name = s;
+    }
+    void setChance (int c)
+    {
+        chance = c;
+    }
+    string getName()
+    {
+        return name;
+    }
+    int getChance()
+    {
+        return chance;
+    }
+};
+
+class State
+{
+private:
+    string name;
+    string status;
+    int chance;
+public:
+    State()
+    {
+        name = "";
+        status = "";
+        chance = 0;
+    }
+    void setName(string n)
+    {
+        name = n;
+    }
+    void setStatus(string s)
+    {
+        status = s;
+        setChance();
+    }
+    void setChance()
+    {
+        if(status == "Green") chance = 0;
+        else if(status == "Yellow") chance = 5;
+        else if(status == "Red") chance = 10;
+    }
+    string getName()
+    {
+        return name;
+    }
+    string getStatus()
+    {
+        return status;
+    }
+    int getChance()
+    {
+        return chance;
+    }
+};
+
 class Symptom
 {
 private:
@@ -46,75 +128,22 @@ public:
     }
 };
 
-class State
-{
-private:
-    string name;
-    string status;
-    int chance;
-public:
-    State()
-    {
-        name = "";
-        status = "";
-        chance = 0;
-    }
-    void setName(string n)
-    {
-        name = n;
-    }
-    void setStatus(string s)
-    {
-        status = s;
-        setChance();
-    }
-    void setChance()
-    {
-        if(status == "Green") chance = 0;
-        else if(status == "Yellow") chance = 10;
-        else if(status == "Red") chance = 20;
-    }
-    string getName()
-    {
-        return name;
-    }
-    string getStatus()
-    {
-        return status;
-    }
-    int getChance()
-    {
-        return chance;
-    }
-    // void readFile()
-    // {
-    //     ifstream fin ("statezone.txt");
-    //     int count = 0;
-    //     while ( getline(fin,name,',') )
-    //     {
-    //         getline(fin,status);
-    //         count++;
-    //     }
-    //     fin.close();
-    // }
-};
-
 class Person
 {
 protected:
     string name;
     int age;
-    int count;
     vector<Symptom*> symptom;
     State* currLoc;
+    int dh;                         //diseaseHistory indicator, 1 if person have had the disease
     int chance;
 public:
     Person()
     {
         name = "";
         age = 0;
-        count = 0;
         currLoc = NULL;
+        dh = 0;
         chance = 0;
     };
     void setName(string n)
@@ -133,10 +162,17 @@ public:
     {
         currLoc = s;
     }
+    void setDh(int i)
+    {
+        dh = i;
+    }
     virtual void setChance()
     {
-        // for(auto i : symptom)
-        //     chance += i->getChance();
+        
+    }
+    void addChance(int i)
+    {
+        chance += i;
     }
     string getName()
     {
@@ -171,7 +207,8 @@ public:
             chance += i->getChance();
 
         chance += currLoc->getChance();
-        chance += prevLoc->getChance();
+        // chance += prevLoc->getChance();
+        if(dh == 1) chance += 10;
     }
 };
 
@@ -187,55 +224,25 @@ public:
             chance += i->getChance();
 
         chance += currLoc->getChance();
+        if(dh == 1) chance += 10;
         chance += 10;
+        
     }
 };
 
-class DiseaseHistory
+vector<DiseaseHistory> dhInput()
 {
-private:
-    string name;
-    int chance;
-public:
-    DiseaseHistory()
-    {
-        name = "";
-        chance = 0;
-    }
-    void setName (string s)
-    {
-        name = s;
-    }
-    void setChance (int c)
-    {
-        chance = c;
-    }
-    string getName()
-    {
-        return name;
-    }
-    int getChance()
-    {
-        return chance;
-    }
-};
-
-vector<Symptom> symptomInput()
-{
-    vector<Symptom> vTemp;      //temp for vector of Symptom
-    Symptom cTemp;              //temp for Symptom
-    string nTemp;               //temp for name
-    string chTemp;              //temp for chance
-    string qTemp;               //temp for question
-    ifstream inf("symptom.txt");
+    vector<DiseaseHistory> vTemp;   //temp for vector of DiseaseHistory
+    DiseaseHistory cTemp;           //temp for DiseaseHistory
+    string nTemp;                   //temp for name
+    string chTemp;                  // temp for chance
+    ifstream inf("diseasehistory.txt");
     while(!inf.eof())
     {
         getline(inf, nTemp, ',');
-        getline(inf, chTemp, ',');
-        getline(inf, qTemp, '\n');
+        getline(inf, chTemp, '\n');
         cTemp.setName(nTemp);
         cTemp.setChance(stoi(chTemp));
-        cTemp.setQuestion(qTemp);
         vTemp.push_back(cTemp);
     }
     inf.close();
@@ -260,20 +267,22 @@ vector<State> stateInput()
     inf.close();
     return vTemp;
 }
-
-vector<DiseaseHistory> dhInput()
+vector<Symptom> symptomInput()
 {
-    vector<DiseaseHistory> vTemp;   //temp for vector of DiseaseHistory
-    DiseaseHistory cTemp;           //temp for DiseaseHistory
-    string nTemp;                   //temp for name
-    string chTemp;                  // temp for chance
-    ifstream inf("diseasehistory.txt");
+    vector<Symptom> vTemp;      //temp for vector of Symptom
+    Symptom cTemp;              //temp for Symptom
+    string nTemp;               //temp for name
+    string chTemp;              //temp for chance
+    string qTemp;               //temp for question
+    ifstream inf("symptom.txt");
     while(!inf.eof())
     {
         getline(inf, nTemp, ',');
-        getline(inf, chTemp, '\n');
+        getline(inf, chTemp, ',');
+        getline(inf, qTemp, '\n');
         cTemp.setName(nTemp);
         cTemp.setChance(stoi(chTemp));
+        cTemp.setQuestion(qTemp);
         vTemp.push_back(cTemp);
     }
     inf.close();
@@ -284,11 +293,13 @@ void intro()
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !       Hi, I'm LiSA. I'm going to ask you some questions.                 !\n"
+         << "   !       Hi, I'm Albert Bot. I'm going to ask you some questions.           !\n"
          << "   !       I will use your answers to give you advice about the right level   !\n"
          << "   !       of medical care you should seek.                                   !\n"
          << "   !                                                                          !\n"
          << "   !       Let's get started.                                                 !\n"
+         << "   !                                                                          !\n"
+         << "   !       Note: To exit the application, please close the window             !\n"
          << "   \\__________________________________________________________________________/\n";
 }
 
@@ -317,7 +328,7 @@ void location(vector<State>& state)
          << "   !       Where in the Malaysia are you located?                             !\n"
          << "   !                                                                          !\n";
     for(int i = 0; i < state.size(); ++i)
-        cout << "   !       " << left << setw(4) << i+1 << setw(63) << state[i].getName() << "!\n";     //kalau pakai setw -> char[82] (+1)
+        cout << "   !       " << left << setw(4) << i+1 << setw(63) << state[i].getName() << "!\n";     //kalau pakai setw -> char[82] (81+1)
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -362,7 +373,7 @@ void symptomQuestion(Symptom* sq)
     cout << "   \\__________________________________________________________________________/\n";
 }
 
-void last()
+void analysisLoading()
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
@@ -370,23 +381,111 @@ void last()
     cout << "   \\__________________________________________________________________________/\n";
 }
 
-void analysis()
+void analysis(Local& l)
 {
-    cout << "______________________________________________________________________________ \n"
-         << "   \\                                                                          \\\n"
-         << "   !       I'm analyzing your answers...                                      !\n";
-    cout << "   \\__________________________________________________________________________/\n";
+    int chance = l.getChance();
+    if(chance < 33)
+    {
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       RECOMMENDATION                                                     !\n"
+             << "   !                                                                          !\n"
+             << "   !       Follow preventive measures.                                        !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       It looks like your symptoms do not suggest that you have           !\n"
+             << "   !       COVID-19. Continue following the common measures                   !\n"
+             << "   !       and government directives to avoid contracting COVID-19.           !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+    }
+    else if(chance < 66)
+    {
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       RECOMMENDATION                                                     !\n"
+             << "   !                                                                          !\n"
+             << "   !       Quarantine.                                                        !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+        cout << "______________________________________________________________________________ \n"
+            << "   \\                                                                          \\\n"
+            << "   !       Your symptoms currently do not suggest that you have COVID-19.     !\n"
+            << "   !       However, according to the WHO and CDC guidelines,                  !\n"
+            << "   !       it is strongly recommended that you keep yourself separated        !\n"
+            << "   !       from others for the next 14 days.                                  !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+    }
+    else
+    {
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       RECOMMENDATION                                                     !\n"
+             << "   !                                                                          !\n"
+             << "   !       Call the emergency number. Avoid all contact.                      !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+    }
+}
+
+void analysis(Foreign& f)
+{
+    int chance = f.getChance();
+    if(chance < 50)
+    {
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       RECOMMENDATION                                                     !\n"
+             << "   !                                                                          !\n"
+             << "   !       Quarantine.                                                        !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+        cout << "______________________________________________________________________________ \n"
+            << "   \\                                                                          \\\n"
+            << "   !       Your symptoms currently do not suggest that you have COVID-19.     !\n"
+            << "   !       However, according to the WHO and CDC guidelines,                  !\n"
+            << "   !       it is strongly recommended that you keep yourself separated        !\n"
+            << "   !       from others for the next 14 days.                                  !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+    }
+    else
+    {
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       RECOMMENDATION                                                     !\n"
+             << "   !                                                                          !\n"
+             << "   !       Call the emergency number. Avoid all contact.                      !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+        cout << "______________________________________________________________________________ \n"
+             << "   \\                                                                          \\\n"
+             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n";
+        cout << "   \\__________________________________________________________________________/\n";
+    }
 }
 
 void checkPrev(vector<Local>& l, vector<Foreign>& f)
 {
-    
+    int localN = l.size();
+    int foreignN = f.size();
+    if(localN + foreignN == 0) return;
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !       I'm analyzing your answers...                                      !\n";
-    cout << "   \\__________________________________________________________________________/\n";    
+         << "   !       Please be safe!                                                    !\n"
+         << "   !                                                                          !\n"
+         << "   !       There are " << left << setw(2) << localN + foreignN << setw(55) << " person that may have COVID-19" << "!\n"
+         << "   !       tracked with this application.                                     !\n";
+    cout << "   \\__________________________________________________________________________/\n";
 }
 
+void end()
+{
+    cout << "______________________________________________________________________________ \n"
+         << "   \\                                                                          \\\n"
+         << "   !       Thank you for chatting with me.                                    !\n"
+         << "   !       Stay safe and be healthy!                                          !\n";
+    cout << "   \\__________________________________________________________________________/\n";
+}
 //main kosongin, diisi terakhir
 int main()
 {
@@ -395,118 +494,166 @@ int main()
     vector<Symptom> vecS = symptomInput();
     vector<Local> vecL;
     vector<Foreign> vecF;
-    Local l;
-    Foreign f;
-    int temp;
-    int a;                  //temp for age
-    int cL;                 //temp for current location
-    int o;                  //temp for overseas
-    string dh;
-    string s;
 
-    intro();
-    Sleep(1000);
-
-    gender();
-    cout << "\n   Your input: ";
-    cin >> temp;
-    Sleep(1000);
-
-    age();
-    cout << "\n   Your input: ";
-    cin >> a;
-    Sleep(1000);
-
-    location(vecSt);
-    cout << "\n   Your input: ";
-    cin >> cL;
-    Sleep(1000);
-
-    overseas();
-    cout << "\n   Your input: ";
-    cin >> o;
-    Sleep(1000);
-
-    if(o == 1)
+    while(1)
     {
-        f.setAge(a);
-        f.setCurrLoc(&vecSt[cL-1]);
-    }
-    else if(o == 2)
-    {
-        l.setAge(a);
-        l.setCurrLoc(&vecSt[cL-1]);
-    }
+        Local l;
+        Foreign f;
+        int temp;
+        int a;                  //temp for age
+        int cL;                 //temp for current location
+        int o;                  //temp for overseas
+        string dh;
+        string s;
 
-    diseaseHistory(vecDh);
-    cout << "\n   Your input: ";
-    cin >> temp;
-    Sleep(1000);
-
-    symptom(vecS);
-    cout << "\n   Your input: ";
-    cin.ignore();
-    getline(cin, s);
-    if(o == 1)
-    {
-        for(char i : s)
+        system("cls");
+        intro();
+        Sleep(1000);
+        
+        try
         {
-            if(i == ' ') continue;
-            int j = i - '0' - 1;
-            for(int k = 0; k < vecS.size(); ++k)
-            {
-                if(j == k)
-                {
-                    f.addSymptom(&vecS[j]);
-                }
-            }
-        }
-    }
-    else if(o == 2)
-    {
-        for(char i : s)
-        {
-            if(i == ' ') continue;
-            int j = i - '0' - 1;
-            for(int k = 0; k < vecS.size(); ++k)
-            {
-                if(j == k)
-                {
-                    l.addSymptom(&vecS[j]);
-                }
-            }
-        }
-    }
-    Sleep(1000);
-
-    // l.addSymptom(&vecS[0]);
-    // symptomQuestion((*l.getSymptom())[0]);
-    // cout << "\n   Your input: ";
-    // cin >> temp;
-    // Sleep(1000);
-    if(o == 1)
-    {
-        for(auto i : *f.getSymptom())
-        {
-            symptomQuestion(i);
+            gender();
             cout << "\n   Your input: ";
             cin >> temp;
             Sleep(1000);
-        }
-    }
-    else if(o == 2)
-    {
-        for(auto i : *l.getSymptom())
-        {
-            symptomQuestion(i);
+            if(temp != 1 && temp != 2) throw invinput;
+            
+            age();
+            cout << "\n   Your input: ";
+            cin >> a;
+            Sleep(1000);
+            if(a < 1 || a > 100) throw invinput;
+            
+            location(vecSt);
+            cout << "\n   Your input: ";
+            cin >> cL;
+            Sleep(1000);
+            if(cL < 1 || cL > vecSt.size()) throw invinput;
+            
+            overseas();
+            cout << "\n   Your input: ";
+            cin >> o;
+            Sleep(1000);
+            if(o != 1 && o != 2) throw invinput;
+            if(o == 1)
+            {
+                f.setAge(a);
+                f.setCurrLoc(&vecSt[cL-1]);
+            }
+            else if(o == 2)
+            {
+                l.setAge(a);
+                l.setCurrLoc(&vecSt[cL-1]);
+            }
+
+            diseaseHistory(vecDh);
             cout << "\n   Your input: ";
             cin >> temp;
             Sleep(1000);
+            if(temp != 1 && temp != 2) throw invinput;
+            if(temp == 1)
+            {
+                if(o == 1) f.setDh(1);
+                else if(o == 2) l.setDh(1);
+            }
+
+            symptom(vecS);
+            cout << "\n   Your input: ";
+            cin.ignore();
+            getline(cin, s);
+            Sleep(1000);
+            if(o == 1)
+            {
+                for(char i : s)
+                {
+                    if(i == ' ') continue;
+                    int j = i - '0' - 1;
+                    for(int k = 0; k < vecS.size(); ++k)
+                    {
+                        if(j == k)
+                        {
+                            f.addSymptom(&vecS[j]);
+                        }
+                    }
+                }
+            }
+            else if(o == 2)
+            {
+                for(char i : s)
+                {
+                    if(i == ' ') continue;
+                    int j = i - '0' - 1;
+                    for(int k = 0; k < vecS.size(); ++k)
+                    {
+                        if(j == k)
+                        {
+                            l.addSymptom(&vecS[j]);
+                        }
+                    }
+                }
+            }
+
+            if(o == 1)
+            {
+                for(auto i : *f.getSymptom())
+                {
+                    symptomQuestion(i);
+                    cout << "\n   Your input: ";
+                    cin >> temp;
+                    if(temp != 1 && temp != 2) throw invinput;
+                    if(temp == 1) f.addChance(10);
+                    Sleep(1000);
+                }
+            }
+            else if(o == 2)
+            {
+                for(auto i : *l.getSymptom())
+                {
+                    symptomQuestion(i);
+                    cout << "\n   Your input: ";
+                    cin >> temp;
+                    if(temp != 1 && temp != 2) throw invinput;
+                    if(temp == 1) l.addChance(10);
+                    Sleep(1000);
+                }
+            }
         }
+        catch(const exception& e)
+        {
+            cout << e.what() << '\n';
+            cout << "\n";
+            system("pause");
+            return 0;
+        }
+
+        analysisLoading();
+        Sleep(1000);
+        if(o == 1) f.setChance();
+        else if(o == 2) l.setChance();
+
+        if(o == 1) analysis(f);
+        else if(o == 2) analysis(l);
+        Sleep(1000);
+
+        checkPrev(vecL, vecF);
+        Sleep(1000);
+
+        end();
+        if(o == 1)
+        {
+            vecF.push_back(f);
+        }
+        else if(o == 2)
+        {
+            if(l.getChance() >= 50)
+                vecL.push_back(l);
+        }
+
+        cout << "Local chance: " << l.getChance() << "\n";
+        cout << "Foreign chance: " << f.getChance() << "\n";
+        system("pause");
     }
 
-    last();
-    
 
     cout << "\n";
     system("pause");
