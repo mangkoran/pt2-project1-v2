@@ -182,6 +182,10 @@ public:
     {
         return &symptom;
     }
+    State* getCurrLoc()
+    {
+        return currLoc;
+    }
     int getChance()
     {
         return chance;
@@ -350,7 +354,10 @@ void diseaseHistory(vector<DiseaseHistory>& dh)
          << "   !       Do you have any of these disease previously?                       !\n"
          << "   !                                                                          !\n";
     for(int i = 0; i < dh.size(); ++i)
-        cout << "   !       " << left << setw(4) << i+1 << setw(63) << dh[i].getName() << "!\n";
+        cout << "   !       " << left << setw(4) << "-" << setw(63) << dh[i].getName() << "!\n";
+    cout << "   !                                                                          !\n"
+         << "   !       1   Yes                                                            !\n"
+         << "   !       2   No                                                             !\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -362,14 +369,16 @@ void symptom(vector<Symptom>& symptom)
          << "   !                                                                          !\n";
     for(int i = 0; i < symptom.size(); ++i)
         cout << "   !       " << left << setw(4) << i+1 << setw(63) << symptom[i].getName() << "!\n";
+    cout << "   !                                                                          !\n"
+         << "   !       Example: if you are experiencing 1 and 2, enter \"12\"               !\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
-void symptomQuestion(Symptom* sq)
+void symptomQuestion(Symptom* s)
 {
     cout << "______________________________________________________________________________ \n"
          << "   \\                                                                          \\\n"
-         << "   !       " << left << setw(67) << sq->getQuestion() << "!\n";
+         << "   !       " << left << setw(67) << s->getQuestion() << "!\n";
     cout << "   \\__________________________________________________________________________/\n";
 }
 
@@ -425,7 +434,9 @@ void analysis(Local& l)
         cout << "   \\__________________________________________________________________________/\n";
         cout << "______________________________________________________________________________ \n"
              << "   \\                                                                          \\\n"
-             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n";
+             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n"
+             << "   !       I have informed the " << right << setw(16) << l.getCurrLoc()->getName() << " Health Department             !\n"
+             << "   !       about your condition.                                              !\n";
         cout << "   \\__________________________________________________________________________/\n";
     }
 }
@@ -459,7 +470,9 @@ void analysis(Foreign& f)
         cout << "   \\__________________________________________________________________________/\n";
         cout << "______________________________________________________________________________ \n"
              << "   \\                                                                          \\\n"
-             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n";
+             << "   !       Your symptoms are very serious and you may have COVID-19.          !\n"
+             << "   !       I have informed the " << right << setw(16) << f.getCurrLoc()->getName() << " Health Department             !\n"
+             << "   !       about your condition.                                              !\n";
         cout << "   \\__________________________________________________________________________/\n";
     }
 }
@@ -495,20 +508,20 @@ int main()
     vector<Local> vecL;
     vector<Foreign> vecF;
 
-    while(1)
+    while(1)                    //infinte loop, terminate by closing the program
     {
         Local l;
         Foreign f;
-        int temp;
+        int temp;               //temp for some inputs
         int a;                  //temp for age
         int cL;                 //temp for current location
         int o;                  //temp for overseas
-        string dh;
-        string s;
+        string dh;              //temp for diseaseHistory
+        string s;               //temp for symptom
 
         system("cls");
         intro();
-        Sleep(1000);
+        Sleep(5000);
         
         try
         {
@@ -601,7 +614,7 @@ int main()
                     cout << "\n   Your input: ";
                     cin >> temp;
                     if(temp != 1 && temp != 2) throw invinput;
-                    if(temp == 1) f.addChance(10);
+                    if(temp == 1) f.addChance(20);
                     Sleep(1000);
                 }
             }
@@ -613,7 +626,7 @@ int main()
                     cout << "\n   Your input: ";
                     cin >> temp;
                     if(temp != 1 && temp != 2) throw invinput;
-                    if(temp == 1) l.addChance(10);
+                    if(temp == 1) l.addChance(20);
                     Sleep(1000);
                 }
             }
@@ -627,16 +640,16 @@ int main()
         }
 
         analysisLoading();
-        Sleep(1000);
+        Sleep(5000);
         if(o == 1) f.setChance();
         else if(o == 2) l.setChance();
 
         if(o == 1) analysis(f);
         else if(o == 2) analysis(l);
-        Sleep(1000);
+        Sleep(5000);
 
         checkPrev(vecL, vecF);
-        Sleep(1000);
+        Sleep(5000);
 
         end();
         if(o == 1)
@@ -649,8 +662,9 @@ int main()
                 vecL.push_back(l);
         }
 
-        cout << "Local chance: " << l.getChance() << "\n";
-        cout << "Foreign chance: " << f.getChance() << "\n";
+        // cout << "\nLocal chance: " << l.getChance();
+        // cout << "\nForeign chance: " << f.getChance() << "\n";
+        cout << "\n";
         system("pause");
     }
 
